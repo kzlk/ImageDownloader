@@ -1,0 +1,49 @@
+@startwbs ImagedownloaderApplication_Kozliuk
+* Image downloader application
+** Development (12 day)
+*** Create Http client (3 day)
+**** Search picture over Internet by keyword
+***** GET request to server \n(Google, Bing, Unsplash or some photo service for example)
+***** Handle result from server
+****** Parsing result for getting photos links (URL)
+****** Handle error message
+*** Downloading module (4 day)
+**** Choosing picture to be downloaded module
+***** Parallel download for few picture selected
+****** Create Thread Pool
+**** Progress indicator for each \ndownloading picture 
+**** Caching for huge amount \npictures downloading
+**** Downloading images to the \n folder
+***** Set some folder for downloading
+***** Use default user folder for downloading if \nfolder not set by user
+**** Asynchronous downloading \n(Non-blocking UI) 
+*** Search History module (1 day)
+***< GUI (4 day)
+**** Design UI 
+**** Main window 
+***** Searching
+****** LineEdit for keyword of search request
+****** Button "Search" for searching images
+***** Display result 
+****** Show images like a gallery
+***** Mouse clicker on image
+****** One click for choosing image to download
+****** Double click for open image in new window
+***** Button "Download"  for downloading
+***** Button "Cancel" for cancel Downloading
+***** Progress bar indicator for each downloaded image
+**** Setting window
+***** Browse for Folder that woult be saved the downloaded image
+**** History window
+***** Dispaly all searching keyword 
+***** Button "Clear" to clear search history
+** Testing (1 day)
+*** Testing in Linux OS (Ubuntu) 
+*** Testing in Windows OS (Windows 11)
+** Documentation (1 day)
+*** Requirements specification
+*** Software design documentation
+**** Application modules description
+**** Class diagram
+**** Sequence diagram
+@endwbs
