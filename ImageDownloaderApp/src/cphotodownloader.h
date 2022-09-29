@@ -1,6 +1,5 @@
 #ifndef CPHOTODOWNLOADER_H
 #define CPHOTODOWNLOADER_H
-
 #include "qimagereader.h"
 #include "qmutex.h"
 #include <QObject>
@@ -10,6 +9,8 @@
 #include <QFile>
 #include <QStringList>
 #include <QListWidget>
+#include <QRunnable>
+#include "cphotopage.h"
 
 class FileDownloader : public QObject
 {
@@ -26,6 +27,8 @@ private:
     QByteArray m_DownloadedData;
     QSize m_target_size;
 
+    //
+
 private slots:
     void onFinished(QNetworkReply*);
 
@@ -38,6 +41,10 @@ signals:
    void downloaded(const QString& imgUrl,
                    QImage*,
                    const QSize);
+
+   void downloadedOriginal(const QString& imgUrl,
+                           QImage*,
+                           const QSize);
 
 };
 

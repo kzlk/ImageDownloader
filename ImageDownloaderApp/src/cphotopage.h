@@ -15,11 +15,13 @@ public:
 
     bool parseJson(const QJsonObject& jsonObject) override;
 
-    QList<CPhoto*> photos() const;
+    //Vector - index search O(1)
+    //List - index search n/a
+    QVector<CPhoto*> photos() const;
 
    private:
 
-    QList<CPhoto*> _photos;
+    QVector<CPhoto*> _photos;
 
 };
 

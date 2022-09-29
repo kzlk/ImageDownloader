@@ -34,6 +34,7 @@ private:
     int m_lastPage;
     QString m_searchKey;
     void init();
+    QVector<int> downloadPrepare{};
 
 public:
     Ui::CPexelsMainWindow *ui;
@@ -53,6 +54,8 @@ public slots:
     void goToLastPage();
     void goToFirstPage();
 
+    void prepareImage(QListWidgetItem*);
+
 
 signals:
     void setImage(QString imageUrl, QSize sz);
@@ -62,5 +65,8 @@ private slots:
     void on_actionSearch_triggered();
     void on_actionDownload_triggered();
     void on_actionChangeFolder_triggered();
+    void on_btn_changeFolder_clicked();
+    void on_pushButton_download_clicked();
+
 };
 #endif // CPEXELSMAINWINDOW_H

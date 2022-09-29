@@ -1,4 +1,4 @@
-QT       += core gui network
+QT       += core gui network core5compat
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -36,24 +36,9 @@ RESOURCES += \
     resources/resources.qrc
 
 DISTFILES += \
-    resources/icons/FlickrImageSearch.ico \
-    resources/icons/FlipH.svg \
-    resources/icons/FlipV.svg \
-    resources/icons/go-next.svg \
-    resources/icons/go-previous.svg \
-    resources/icons/loading.png \
-    resources/icons/object-rotate-left.svg \
-    resources/icons/object-rotate-right.svg \
-    resources/icons/transform-crop.svg \
-    resources/icons/zoom-in.svg \
-    resources/icons/zoom-out.svg\
     resources/icons/baseline_folder_white_24dp.ico \
     resources/icons/baseline_folder_white_24dp.png \
     resources/icons/baseline_file_download_white_24dp.ico \
     resources/icons/baseline_file_download_white_24dp.png \
     resources/icons/baseline_search_white_48dp.ico \
     resources/icons/baseline_search_white_48dp.png \
-
-
-
-

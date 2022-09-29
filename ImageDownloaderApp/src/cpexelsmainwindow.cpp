@@ -3,6 +3,10 @@
 
 #include <QSplitter>
 #include <QPainter>
+#include <QFileDialog>
+#include <QRegExp>
+#include <QRegularExpressionMatch>
+#include <qregularexpression.h>
 
 #define MY_API_KEY "563492ad6f917000010000012f6388fbf5064c56baad8491e5de9bad"
 int CPexelsMainWindow::counter = 0;
@@ -35,14 +39,19 @@ CPexelsMainWindow::CPexelsMainWindow(QWidget *parent)
     statusImgUrlLabel = new QLabel(this);
     statusBar()->addPermanentWidget(statusImgUrlLabel);
     statusImgUrlLabel->setText("Image Url: None");
-
+    //connect button search
     connect(ui->btnSearch, &QPushButton::clicked, this, &CPexelsMainWindow::doSearch);
     connect(&pexelsApi, &CPexelsApi::gotImagesUrlList, this, &CPexelsMainWindow::loadImage);
     connect(&imgDownloader, &FileDownloader::downloaded, this, &CPexelsMainWindow::displayImage);
     connect(this, &CPexelsMainWindow::setImage, this, &CPexelsMainWindow::downloadSetImage);
     ui->listWidget->setViewMode(QListWidget::IconMode);
 
-    connect(ui->listWidget, &QListWidget::itemClicked, this, &CPexelsMainWindow::viewImage);
+    //click on item on QListWidget
+    connect(ui->listWidget, &QListWidget::itemDoubleClicked, this, &CPexelsMainWindow::viewImage);
+
+    //
+    connect(ui->listWidget,  &QListWidget::itemClicked,this, &CPexelsMainWindow::prepareImage);
+
 
     init();
 
@@ -69,6 +78,7 @@ void CPexelsMainWindow::init()
     ui->edtNextPage->setText("2");
 }
 
+//TODO: add item to history
 void CPexelsMainWindow :: doSearch(int pageNumber)
 {
     if(ui->edtSearch->text().isEmpty())
@@ -76,6 +86,7 @@ void CPexelsMainWindow :: doSearch(int pageNumber)
         QMessageBox::critical(this, "Error", "No search input provided");
         return;
     }
+
     ui->grpPageTrack->setHidden(false);
     m_imgViewer->init();
     m_imgViewer->setHidden(true);
@@ -139,6 +150,7 @@ void CPexelsMainWindow::downloadSetImage(QString imageUrl, QSize sz)
     imgDownloader.setFile(imageUrl, sz);
 }
 
+//TODO: view original image
 void CPexelsMainWindow::viewImage(QListWidgetItem* item)
 {
     m_imgViewer->setHidden(false);
@@ -149,8 +161,20 @@ void CPexelsMainWindow::viewImage(QListWidgetItem* item)
         m_imgViewer->attachImagePtr(imgPtr);
 
         auto imgUrl = item->data(Qt::UserRole).toString();
-        statusImgUrlLabel->setText(QString("Image Url: %1").arg(imgUrl));
+
+        for(int i = 0; i < pexelsApi.photoPage->itemsPerPage(); i++)
+        {
+            auto a = pexelsApi.photoPage->photos()[i]->srcUrl(pexelsApi.photoPage->photos()[i]->TINY);
+            if(a == imgUrl)
+            {
+                  statusImgUrlLabel->setText(QString("Image Url: %1").arg(pexelsApi.photoPage->photos()[i]->srcUrl(pexelsApi.photoPage->photos()[i]->ORIGINAL)));
+            }else
+            {
+                qDebug() << imgUrl << " Original image not found";
+            }
+        }
     }
+
 }
 
 void CPexelsMainWindow::keyPressEvent(QKeyEvent *event)
@@ -202,10 +226,45 @@ void CPexelsMainWindow::goToFirstPage()
     ui->edtPreviousPage->setText(QString::number(m_currentPage));
     ui->edtNextPage->setText(QString::number(m_currentPage + 1));
      ui->listWidget->clear();
-    doSearch(m_currentPage);
+     doSearch(m_currentPage);
 }
+//add photo ID
+void CPexelsMainWindow::prepareImage(QListWidgetItem *item)
+{
 
+       static QRegularExpression re("\\d+");
+       static QRegularExpressionMatch match;
+               match = re.match(item->data(Qt::UserRole).toString());
+       int matched{};
 
+       if (match.hasMatch())
+       {
+
+            matched = match.captured(0).toInt();
+            qDebug() << "From match " << matched;
+            if(downloadPrepare.begin() == downloadPrepare.end())
+            {
+                downloadPrepare.push_back(matched);
+                qDebug() << "Item " << matched << " added to Vector from else";
+                return;
+            }
+
+            for(QVector<int>::ConstIterator iter = downloadPrepare.begin(); iter != downloadPrepare.end(); ++iter )
+            {
+                if(*iter == matched)
+                {
+                    qDebug() << "Item " << matched << " removed from Vector";
+                    downloadPrepare.erase(iter);
+                    return;
+                }
+            }
+            }
+
+       downloadPrepare.push_back(matched);
+       qDebug() << "Item " << matched << " added to Vector";
+       return;
+
+       }
 
 
 void CPexelsMainWindow::on_actionSearch_triggered()
@@ -224,4 +283,28 @@ void CPexelsMainWindow::on_actionChangeFolder_triggered()
 {
     ui->stackedWidget->setCurrentIndex(1);
 }
+
+
+void CPexelsMainWindow::on_btn_changeFolder_clicked()
+{
+    QString path = QFileDialog::getExistingDirectory(this, "Folder choosing",
+                                                     QStandardPaths::displayName(QStandardPaths::DocumentsLocation));
+    ui->lineEdit_select_folder->setText(path);
+}
+
+
+
+
+void CPexelsMainWindow::on_pushButton_download_clicked()
+{
+    // delete all progress bar
+    // add status bar on 2 page on stacked widget
+    // function which append to queue url TINY to download and select from Image list ORIGINAL url
+    // if image is select? then delete it
+    // function download image with selected image
+    // class download driver/engine
+    //  method to get data from selected url
+}
+
+
 

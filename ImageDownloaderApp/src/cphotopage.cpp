@@ -2,7 +2,7 @@
 #include "qjsonarray.h"
 
 
-QList<CPhoto*> CPhotoPage::photos() const
+QVector<CPhoto*> CPhotoPage::photos() const
 {
     return _photos;
 }
