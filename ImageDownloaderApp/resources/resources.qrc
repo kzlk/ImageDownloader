@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/icons">
+    </qresource>
+    <qresource prefix="/">
+        <file>icons/baseline_file_download_white_24dp.png</file>
+        <file>icons/baseline_folder_white_24dp.png</file>
+        <file>icons/baseline_history_white_24dp.png</file>
+        <file>icons/baseline_info_white_24dp.png</file>
+        <file>icons/baseline_search_white_24dp.png</file>
+        <file>icons/folder.svg</file>
+    </qresource>
+</RCC>
