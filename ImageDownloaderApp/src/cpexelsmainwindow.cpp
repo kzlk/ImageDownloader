@@ -17,6 +17,12 @@ CPexelsMainWindow::CPexelsMainWindow(QWidget *parent)
       ui(new Ui::CPexelsMainWindow)
 {
     ui->setupUi(this);
+    pool = new QThreadPool(this);
+
+
+    folderPath = folderSetting.getFolderPath();
+    ui->lineEdit_select_folder->setText(this->folderPath);
+
 
     auto image_spliter = new QSplitter(Qt::Horizontal);
     image_spliter->addWidget(ui->listWidget);
@@ -157,22 +163,14 @@ void CPexelsMainWindow::viewImage(QListWidgetItem* item)
 
     auto imgPtr = m_mpImageList[item];
 
-    if(imgPtr){
+    if(imgPtr)
+    {
         m_imgViewer->attachImagePtr(imgPtr);
 
         auto imgUrl = item->data(Qt::UserRole).toString();
 
-        for(int i = 0; i < pexelsApi.photoPage->itemsPerPage(); i++)
-        {
-            auto a = pexelsApi.photoPage->photos()[i]->srcUrl(pexelsApi.photoPage->photos()[i]->TINY);
-            if(a == imgUrl)
-            {
-                  statusImgUrlLabel->setText(QString("Image Url: %1").arg(pexelsApi.photoPage->photos()[i]->srcUrl(pexelsApi.photoPage->photos()[i]->ORIGINAL)));
-            }else
-            {
-                qDebug() << imgUrl << " Original image not found";
-            }
-        }
+        statusImgUrlLabel->setText(QString("Image Url: %1").arg(imgUrl));
+
     }
 
 }
@@ -281,6 +279,8 @@ void CPexelsMainWindow::on_actionDownload_triggered()
 
 void CPexelsMainWindow::on_actionChangeFolder_triggered()
 {
+
+    qDebug() << "Folder << " << folderPath;
     ui->stackedWidget->setCurrentIndex(1);
 }
 
@@ -290,20 +290,19 @@ void CPexelsMainWindow::on_btn_changeFolder_clicked()
     QString path = QFileDialog::getExistingDirectory(this, "Folder choosing",
                                                      QStandardPaths::displayName(QStandardPaths::DocumentsLocation));
     ui->lineEdit_select_folder->setText(path);
+
+    folderSetting.writeFolderPath(path);
+
 }
-
-
-
 
 void CPexelsMainWindow::on_pushButton_download_clicked()
 {
-    // delete all progress bar
-    // add status bar on 2 page on stacked widget
-    // function which append to queue url TINY to download and select from Image list ORIGINAL url
-    // if image is select? then delete it
-    // function download image with selected image
-    // class download driver/engine
-    //  method to get data from selected url
+//    for (auto &i : downloadPrepare)
+//    {
+//        //Download download(i, ui, file_path);
+//        //pool.start(download)
+//    }
+
 }
 
 

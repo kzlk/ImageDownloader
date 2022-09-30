@@ -4,6 +4,7 @@
 #include "cpexelsapi.h"
 #include "imageviewer.h"
 #include "cphotodownloader.h"
+#include "cfoldersetting.h"
 
 #include <QMainWindow>
 #include <QKeyEvent>
@@ -27,14 +28,21 @@ public:
 
     ImageViewer *m_imgViewer;
 
+    CFolderSetting folderSetting{};
+
 private:
     QLabel *statusImgUrlLabel;
+
     void keyPressEvent(QKeyEvent *event) override;
+
+    QString folderPath{};
     int m_currentPage = 1;
     int m_lastPage;
     QString m_searchKey;
     void init();
     QVector<int> downloadPrepare{};
+    //
+    QThreadPool *pool{};
 
 public:
     Ui::CPexelsMainWindow *ui;

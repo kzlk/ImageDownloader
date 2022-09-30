@@ -8,6 +8,7 @@ CONFIG += c++17
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000
 
 SOURCES += \
+    src/cfoldersetting.cpp \
     src/cpexelsapi.cpp \
     src/cpexelsmainwindow.cpp \
     src/cphoto.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
 
 HEADERS += \
     src/IParser.h \
+    src/cfoldersetting.h \
     src/cpexelsapi.h \
     src/cpexelsmainwindow.h \
     src/cphoto.h \

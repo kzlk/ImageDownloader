@@ -26,6 +26,7 @@ private:
     QString m_fileUrl;
     QByteArray m_DownloadedData;
     QSize m_target_size;
+    QString downloadPath;
 
     //
 

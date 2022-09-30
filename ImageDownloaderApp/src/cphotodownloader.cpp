@@ -57,7 +57,11 @@ void FileDownloader::onFinished(QNetworkReply * reply)
     m_DownloadedData.append(reply->readAll());
     QImage *image = new QImage;
     image->loadFromData(m_DownloadedData);
-
     emit downloaded(m_fileUrl, image, m_target_size);
+
+
+    //make headder that dowmload an original image
+    //
+    // m_DownloadedData.append(reply->readAll());
 
 }
