@@ -16,7 +16,7 @@ CFolderSetting::CFolderSetting()
 #ifdef __linux__
         folderPath = "home/" + QString(getlogin()) + "/downloads/";
 #elif _WIN32
-        folderPath = "C:\\Users\\" + QString(getenv("USERNAME")) + "\\Downloads\\";
+        folderPath = "C:/Users/" + QString(getenv("USERNAME")) + "/Downloads/";
 #endif
         folder->write(folderPath.toUtf8());
         qDebug() << "Default Path" << folderPath << " wrote to" << FOLDER_INFO;

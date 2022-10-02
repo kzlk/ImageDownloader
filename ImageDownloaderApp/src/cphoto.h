@@ -15,8 +15,12 @@ public:
         _COUNT
     };
 
+    int id() const;
     int width() const;
     int height() const;
+
+    //photo description
+    QString alt() const;
 
     explicit CPhoto(QObject* parent);
 
@@ -26,7 +30,8 @@ public:
 
 private:
     QString _srcUrls[_COUNT];
-    int _width, _height;
+    QString _alt;
+    int _width, _height, _id;
 };
 
 #endif // CPHOTO_H

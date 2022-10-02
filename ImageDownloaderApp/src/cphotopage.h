@@ -15,8 +15,6 @@ public:
 
     bool parseJson(const QJsonObject& jsonObject) override;
 
-    //Vector - index search O(1)
-    //List - index search n/a
     QVector<CPhoto*> photos() const;
 
    private:

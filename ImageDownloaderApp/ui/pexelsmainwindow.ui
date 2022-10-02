@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1230</width>
-    <height>823</height>
+    <width>1265</width>
+    <height>764</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -76,15 +76,21 @@
           <x>11</x>
           <y>623</y>
           <width>1145</width>
-          <height>60</height>
+          <height>101</height>
          </rect>
         </property>
         <property name="title">
          <string/>
         </property>
         <layout class="QGridLayout" name="gridLayout_3">
-         <item row="1" column="13">
-          <widget class="QLineEdit" name="edtNextPage">
+         <item row="1" column="9">
+          <widget class="QLineEdit" name="edtCurrentPage">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <pointsize>12</pointsize>
@@ -95,14 +101,8 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="9">
-          <widget class="QLineEdit" name="edtCurrentPage">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
+         <item row="1" column="13">
+          <widget class="QLineEdit" name="edtNextPage">
            <property name="font">
             <font>
              <pointsize>12</pointsize>
@@ -122,18 +122,6 @@
            </property>
            <property name="text">
             <string>Prev Page</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="7">
-          <widget class="QLineEdit" name="edtPreviousPage">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -162,30 +150,6 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="3">
-          <widget class="QLabel" name="lblTotalPages">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>Total Pages:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="14">
-          <widget class="QPushButton" name="btnLastPage">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>Last Page</string>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="8">
           <widget class="QLabel" name="lblCurrentPage">
            <property name="font">
@@ -195,18 +159,6 @@
            </property>
            <property name="text">
             <string>Current Page:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="4">
-          <widget class="QLineEdit" name="edtTotalPages">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -223,15 +175,39 @@
            </property>
           </spacer>
          </item>
-         <item row="1" column="12">
-          <widget class="QPushButton" name="btnNextPage">
+         <item row="1" column="7">
+          <widget class="QLineEdit" name="edtPreviousPage">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLabel" name="lblTotalPages">
            <property name="font">
             <font>
              <pointsize>12</pointsize>
             </font>
            </property>
            <property name="text">
-            <string>Next Page</string>
+            <string>Total Pages:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="4">
+          <widget class="QLineEdit" name="edtTotalPages">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -244,6 +220,57 @@
            </property>
            <property name="text">
             <string>Download</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="14">
+          <widget class="QPushButton" name="btnLastPage">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Last Page</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="12">
+          <widget class="QPushButton" name="btnNextPage">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Next Page</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="8" colspan="2">
+          <widget class="QPushButton" name="pushButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>10000</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
+           </property>
+           <property name="text">
+            <string>Clear all selection</string>
            </property>
           </widget>
          </item>
@@ -444,11 +471,7 @@
       <widget class="QWidget" name="downloadingPage">
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0">
-         <widget class="QPushButton" name="pushButton_2">
-          <property name="text">
-           <string>PushButton</string>
-          </property>
-         </widget>
+         <widget class="QTableWidget" name="tableWidget"/>
         </item>
        </layout>
       </widget>

@@ -42,6 +42,11 @@ bool CPexelsApi::getimageSearchJson(QString searchKey, int pageNumber, QString a
     return true;
 }
 
+QString CPexelsApi::getOriginalImageUrl(const quint32 &imageID, QString &format)
+{
+    return ORIGINAL_IMAGE_URL.arg(imageID).arg(imageID).arg(format);
+}
+
 void CPexelsApi::jsonInfoReceived()
 {
     QJsonObject *jsonList = restClient->userJsonInfo;

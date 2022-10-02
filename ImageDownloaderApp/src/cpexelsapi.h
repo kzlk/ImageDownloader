@@ -28,10 +28,13 @@ private:
     //"query" - searched keyword
      QString FULL_SEARCHED_URL = QString("%1?query=%2&page=%3&per_page=%4");
 
+     QString ORIGINAL_IMAGE_URL = "https://images.pexels.com/photos/%1/pexels-photo-%2.%3";
+
     //for Authorization
     QString HEADER_KEY = "Authorization";
     //my API key
     QString API = "563492ad6f917000010000012f6388fbf5064c56baad8491e5de9bad";
+
 
     qint16 itemPerPage = 60;
 
@@ -61,6 +64,8 @@ public:
     void setHeaderValue(const QString &newHeaderValue);
 
     CPhotoPage* photoPage{};
+
+    QString getOriginalImageUrl(const quint32& imageID, QString& format);
 
 signals:
     void gotImagesUrlList();
