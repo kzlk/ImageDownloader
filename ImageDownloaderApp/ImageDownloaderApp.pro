@@ -1,4 +1,4 @@
-QT       += core gui network core5compat
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -9,6 +9,7 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000
 
 SOURCES += \
     src/cfoldersetting.cpp \
+    src/chistory.cpp \
     src/cpexelsapi.cpp \
     src/cpexelsmainwindow.cpp \
     src/cphoto.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
 HEADERS += \
     src/IParser.h \
     src/cfoldersetting.h \
+    src/chistory.h \
     src/cpexelsapi.h \
     src/cpexelsmainwindow.h \
     src/cphoto.h \

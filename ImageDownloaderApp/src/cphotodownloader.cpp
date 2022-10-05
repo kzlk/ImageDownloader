@@ -7,17 +7,29 @@
 FileDownloader::FileDownloader(QObject *parent) : QObject(parent)
 {
     manager = new QNetworkAccessManager;
-    connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(onFinished(QNetworkReply *)));
+
+    // cache
+    diskCache = new QNetworkDiskCache(this);
+    diskCache->setCacheDirectory("cacheDir");
+    manager->setCache(diskCache);
+
+    connect(manager, &QNetworkAccessManager::finished, this,
+            &FileDownloader::onFinished);
+
+
 }
 
-FileDownloader::FileDownloader(CPhoto *photoObj, QString &folderPath, int &pBarIndex, QObject *parent)
-    : QObject(parent), downloadPath(folderPath), progressBarIndex(pBarIndex), photo(photoObj)
+FileDownloader::FileDownloader(CPhoto *photoObj, QString &folderPath,
+                               int &pBarIndex, QObject *parent)
+    : QObject(parent), downloadPath(folderPath), progressBarIndex(pBarIndex),
+      photo(photoObj)
 {
 }
 
 FileDownloader::~FileDownloader()
 {
     manager->deleteLater();
+    delete diskCache;
 }
 
 void FileDownloader::run()
@@ -26,10 +38,12 @@ void FileDownloader::run()
     setFile((photo->srcUrl(photo->ORIGINAL)));
 
     QEventLoop loop;
-    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()), Qt::QueuedConnection);
-    connect(manager, SIGNAL(finished(QNetworkReply *)), this, SLOT(saveFileToDrive(QNetworkReply *)),
-            Qt::DirectConnection);
-    connect(reply, &QNetworkReply::downloadProgress, this, &FileDownloader::updateProgress, Qt::DirectConnection);
+    connect(reply, SIGNAL(finished()), &loop, SLOT(quit()),
+            Qt::QueuedConnection);
+    connect(manager, &QNetworkAccessManager::finished, this,
+            &FileDownloader::saveFileToDrive, Qt::DirectConnection);
+    connect(reply, &QNetworkReply::downloadProgress, this,
+            &FileDownloader::updateProgress, Qt::DirectConnection);
     loop.exec();
 }
 
@@ -40,7 +54,9 @@ void FileDownloader::saveFileToDrive(QNetworkReply *reply)
     case QNetworkReply::NoError: {
         qDebug("file is downloaded successfully.");
         QFile file(downloadPath + photo->alt() + url.fileName());
-        qDebug() << "Thread # " << Concurrency::details::platform::GetCurrentThreadId() << "download in "
+        qDebug() << "Thread # "
+                 << Concurrency::details::platform::GetCurrentThreadId()
+                 << "download in "
                  << downloadPath + photo->alt() + url.fileName();
         reply->deleteLater();
         m_DownloadedData.append(reply->readAll());
@@ -71,15 +87,23 @@ void FileDownloader::setFile(QString fileURL, const QSize &target_size)
 
     request.setRawHeader("User-Agent", userAgent);
 
-    QSslConfiguration sslConfiguration(QSslConfiguration::defaultConfiguration());
+    QSslConfiguration sslConfiguration(
+        QSslConfiguration::defaultConfiguration());
     sslConfiguration.setPeerVerifyMode(QSslSocket::VerifyNone);
     sslConfiguration.setProtocol(QSsl::AnyProtocol);
     request.setSslConfiguration(sslConfiguration);
+    request.setAttribute(QNetworkRequest::CacheLoadControlAttribute,
+                         QNetworkRequest::PreferCache);
     reply = manager->get(request);
 }
 
 void FileDownloader::onFinished(QNetworkReply *reply)
 {
+    //image from cache? or no?
+    QVariant fromCache =
+        reply->attribute(QNetworkRequest::SourceIsFromCacheAttribute);
+    qDebug() << "Page from cache?" << fromCache.toBool();
+
     switch (reply->error())
     {
     case QNetworkReply::NoError: {
@@ -87,7 +111,6 @@ void FileDownloader::onFinished(QNetworkReply *reply)
         reply->deleteLater();
         m_DownloadedData.append(reply->readAll());
         emit downloaded(m_fileUrl, &m_DownloadedData, m_target_size);
-
     }
     break;
     default: {
@@ -96,8 +119,8 @@ void FileDownloader::onFinished(QNetworkReply *reply)
     }
 }
 
-//update progress bar
-//TODO: make progress in byte/mb per sec -> (1.2MB/3.6MB)
+// update progress bar
+// TODO: make progress in byte/mb per sec -> (1.2MB/3.6MB)
 void FileDownloader::updateProgress(qint64 now, qint64 total)
 {
     emit updateProgressBar(100 * now / total, progressBarIndex);

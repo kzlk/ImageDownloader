@@ -1,9 +1,8 @@
 #include "cpexelsmainwindow.h"
 #include "ui_pexelsmainwindow.h"
-#include <QQueue>
 #include <QFileDialog>
 #include <QPainter>
-#include <QRegExp>
+#include <QQueue>
 #include <QRegularExpressionMatch>
 #include <QSplitter>
 #include <qregularexpression.h>
@@ -12,11 +11,13 @@
 int CPexelsMainWindow::counter = 0;
 
 CPexelsMainWindow::CPexelsMainWindow(QWidget *parent)
-    : QMainWindow(parent), pexelsApi(CPexelsApi(MY_API_KEY)), ui(new Ui::CPexelsMainWindow)
+    : QMainWindow(parent), pexelsApi(CPexelsApi(MY_API_KEY)),
+      ui(new Ui::CPexelsMainWindow)
 {
     ui->setupUi(this);
     //
     folderPath = folderSetting.getFolderPath();
+
     ui->lineEdit_select_folder->setText(this->folderPath);
 
     auto image_spliter = new QSplitter(Qt::Horizontal);
@@ -32,38 +33,50 @@ CPexelsMainWindow::CPexelsMainWindow(QWidget *parent)
 
     int w = main_spliter->width();
     main_spliter->setSizes({w / 7, 10 * w / 7, w / 10});
-    // setCentralWidget(main_spliter);
 
     ui->stackedWidget->addWidget(main_spliter);
-    ui->stackedWidget->setCurrentIndex(3);
+    ui->stackedWidget->setCurrentIndex(4);
 
     statusImgUrlLabel = new QLabel(this);
     statusBar()->addPermanentWidget(statusImgUrlLabel);
     statusImgUrlLabel->setText("Image Url: None");
 
     // connect button search
-    connect(ui->btnSearch, &QPushButton::clicked, this, &CPexelsMainWindow::doSearch);
-    connect(&pexelsApi, &CPexelsApi::gotImagesUrlList, this, &CPexelsMainWindow::loadImage);
+    connect(ui->btnSearch, &QPushButton::clicked, this,
+            &CPexelsMainWindow::doSearch);
+    connect(&pexelsApi, &CPexelsApi::gotImagesUrlList, this,
+            &CPexelsMainWindow::loadImage);
 
-    connect(&imgDownloader, &FileDownloader::downloaded, this, &CPexelsMainWindow::displayImage);
+    connect(&imgDownloader, &FileDownloader::downloaded, this,
+            &CPexelsMainWindow::displayImage);
 
-    connect(this, &CPexelsMainWindow::setImage, this, &CPexelsMainWindow::downloadSetImage);
+    connect(this, &CPexelsMainWindow::setImage, this,
+            &CPexelsMainWindow::downloadSetImage);
     ui->listWidget->setViewMode(QListWidget::IconMode);
 
     // click on item on QListWidget
-    connect(ui->listWidget, &QListWidget::itemDoubleClicked, this, &CPexelsMainWindow::viewImage);
+    connect(ui->listWidget, &QListWidget::itemDoubleClicked, this,
+            &CPexelsMainWindow::viewImage);
 
     //
-    connect(ui->listWidget, &QListWidget::itemClicked, this, &CPexelsMainWindow::prepareImage);
+    connect(ui->listWidget, &QListWidget::itemClicked, this,
+            &CPexelsMainWindow::prepareImage);
 
     init();
 
     ui->grpPageTrack->setHidden(true);
 
-    connect(ui->btnNextPage, &QPushButton::clicked, this, &CPexelsMainWindow::goToNextPage);
-    connect(ui->btnPreviousPage, &QPushButton::clicked, this, &CPexelsMainWindow::goToPrevPage);
-    connect(ui->btnLastPage, &QPushButton::clicked, this, &CPexelsMainWindow::goToLastPage);
-    connect(ui->btnFirstPage, &QPushButton::clicked, this, &CPexelsMainWindow::goToFirstPage);
+    connect(ui->btnNextPage, &QPushButton::clicked, this,
+            &CPexelsMainWindow::goToNextPage);
+    connect(ui->btnPreviousPage, &QPushButton::clicked, this,
+            &CPexelsMainWindow::goToPrevPage);
+    connect(ui->btnLastPage, &QPushButton::clicked, this,
+            &CPexelsMainWindow::goToLastPage);
+    connect(ui->btnFirstPage, &QPushButton::clicked, this,
+            &CPexelsMainWindow::goToFirstPage);
+
+    connect(this, &CPexelsMainWindow::updateHistFile, this,
+            &CPexelsMainWindow::updateHistoryFile);
 
     this->showMaximized();
 }
@@ -81,7 +94,6 @@ void CPexelsMainWindow::init()
     ui->edtNextPage->setText("2");
 }
 
-// TODO: add item to history
 void CPexelsMainWindow ::doSearch(int pageNumber)
 {
     if (ui->edtSearch->text().isEmpty())
@@ -104,6 +116,7 @@ void CPexelsMainWindow ::doSearch(int pageNumber)
         pageNumber = this->m_currentPage;
     }
     m_searchKey = searchKey;
+    CHistory::addHistoryItem(searchKey);
     pexelsApi.getimageSearchJson(searchKey, pageNumber);
     ui->listWidget->clear();
     m_mpImageList.clear();
@@ -116,15 +129,17 @@ void CPexelsMainWindow::loadImage()
     ui->edtTotalPages->setText(QString::number(m_lastPage));
 
     // get TINY image url for faster preview
-    auto imageUrl = pexelsApi.photoPage->photos().at(counter)->srcUrl(pexelsApi.photoPage->photos().at(counter)->TINY);
+    auto imageUrl = pexelsApi.photoPage->photos().at(counter)->srcUrl(
+        pexelsApi.photoPage->photos().at(counter)->TINY);
     counter++;
 
     qDebug() << imageUrl << " | num" << counter;
     emit setImage(imageUrl, QSize(190, 190));
 }
 
-// TODO: прийняти байти
-void CPexelsMainWindow::displayImage(const QString &imgUrl, QByteArray *image, const QSize &target_size)
+// display scaled image && add image to QListWidget
+void CPexelsMainWindow::displayImage(const QString &imgUrl, QByteArray *image,
+                                     const QSize &target_size)
 {
     QImage *img = new QImage();
     img->loadFromData(*image);
@@ -191,7 +206,9 @@ void CPexelsMainWindow::goToNextPage()
     {
         ui->edtCurrentPage->setText(QString::number(++m_currentPage));
         ui->edtPreviousPage->setText(QString::number(m_currentPage - 1));
-        ui->edtNextPage->setText(QString::number((m_currentPage + 1) > m_lastPage ? m_lastPage : (m_currentPage + 1)));
+        ui->edtNextPage->setText(QString::number(
+            (m_currentPage + 1) > m_lastPage ? m_lastPage
+                                             : (m_currentPage + 1)));
         ui->listWidget->clear();
         doSearch(m_currentPage);
     }
@@ -202,7 +219,8 @@ void CPexelsMainWindow::goToPrevPage()
     if (currentPage > 1)
     {
         ui->edtCurrentPage->setText(QString::number(--m_currentPage));
-        ui->edtPreviousPage->setText(QString::number((m_currentPage - 1) == 0 ? 1 : (m_currentPage - 1)));
+        ui->edtPreviousPage->setText(QString::number(
+            (m_currentPage - 1) == 0 ? 1 : (m_currentPage - 1)));
         ui->edtNextPage->setText(QString::number(m_currentPage + 1));
         ui->listWidget->clear();
         doSearch(m_currentPage);
@@ -212,7 +230,7 @@ void CPexelsMainWindow::goToLastPage()
 {
     m_currentPage = m_lastPage;
     ui->edtCurrentPage->setText(QString::number(m_lastPage));
-    ui->edtPreviousPage->setText(QString::number(m_lastPage - 1));
+    ui->edtPreviousPage->setText(QString::number(m_lastPage));
     ui->edtNextPage->setText(QString::number(m_lastPage));
     ui->listWidget->clear();
     doSearch(m_lastPage);
@@ -250,29 +268,34 @@ void CPexelsMainWindow::prepareImage(QListWidgetItem *item)
         {
             if (matched == i->id())
             {
-                statusImgUrlLabel->setText(QString("Description: " + i->alt() + " | ID %1").arg(matched));
+                statusImgUrlLabel->setText(
+                    QString("Description: " + i->alt() + " | ID %1")
+                        .arg(matched));
 
                 if (readyForDownload.begin() == readyForDownload.end())
                 {
-                    readyForDownload.emplaceBack(i);
+                    readyForDownload.push_back(i);
                     qDebug() << "Item " << matched << " added to Vector";
                     return;
                 }
 
-                for (QVector<CPhoto *>::Iterator iter = readyForDownload.begin(); iter != readyForDownload.end();
-                     ++iter)
+                for (QVector<CPhoto *>::Iterator iter =
+                         readyForDownload.begin();
+                     iter != readyForDownload.end(); ++iter)
                 {
                     auto photo = *iter;
                     if (photo->id() == i->id())
                     {
-                        qDebug() << "Item " << matched << " removed from Vector";
+                        qDebug()
+                            << "Item " << matched << " removed from Vector";
                         readyForDownload.erase(iter);
-                        statusImgUrlLabel->setText(QString("Description: None | ID: None"));
+                        statusImgUrlLabel->setText(
+                            QString("Description: None | ID: None"));
                         return;
                     }
                     else
                     {
-                        readyForDownload.emplaceBack(i);
+                        readyForDownload.push_back(i);
                         qDebug() << "Item " << matched << " added to Vector";
                         return;
                     }
@@ -282,34 +305,65 @@ void CPexelsMainWindow::prepareImage(QListWidgetItem *item)
     }
 }
 
-
 void CPexelsMainWindow::updPBar(int pValue, int indexP)
 {
     progressBar.at(indexP)->setValue(pValue);
 }
 
+bool CPexelsMainWindow::checkFolder(QString &path)
+{
+    QFileInfo folder(path);
+    if (!folder.exists())
+    {
+        QMessageBox::warning(this, "Error! ", "Folder doesn't exists");
+        return false;
+    }
+
+    if (!folder.isDir())
+    {
+        QMessageBox::warning(this, "Error! ", "This is not a directory!");
+        return false;
+    }
+
+    return true;
+}
+
+void CPexelsMainWindow::updateHistoryFile(QListWidget *item)
+{
+    QStringList pickedItem{};
+    for (int i = 0; i < item->count(); ++i)
+        pickedItem << item->item(i)->text();
+
+    CHistory::updateHistory(pickedItem);
+}
+
 void CPexelsMainWindow::on_actionSearch_triggered()
 {
-    ui->stackedWidget->setCurrentIndex(3);
+    ui->stackedWidget->setCurrentIndex(4);
 }
 
 void CPexelsMainWindow::on_actionDownload_triggered()
 {
-    ui->stackedWidget->setCurrentIndex(2);
+    ui->stackedWidget->setCurrentIndex(3);
 }
 
 void CPexelsMainWindow::on_actionChangeFolder_triggered()
 {
-
     qDebug() << "Folder << " << folderPath;
+
     ui->stackedWidget->setCurrentIndex(1);
+
+    checkFolder(folderPath);
 }
 
 void CPexelsMainWindow::on_btn_changeFolder_clicked()
 {
-    QString path = QFileDialog::getExistingDirectory(this, "Folder choosing",
-                                                     QStandardPaths::displayName(QStandardPaths::DocumentsLocation));
+    QString path = QFileDialog::getExistingDirectory(
+        this, "Folder choosing",
+        QStandardPaths::displayName(QStandardPaths::DocumentsLocation));
     path += "/";
+    if (!checkFolder(path))
+        return;
     ui->lineEdit_select_folder->setText(path);
     folderPath = path;
     folderSetting.writeFolderPath(path);
@@ -317,11 +371,15 @@ void CPexelsMainWindow::on_btn_changeFolder_clicked()
 
 void CPexelsMainWindow::on_pushButton_download_clicked()
 {
-    for(auto &pBar : progressBar) delete pBar;
+    if (!checkFolder(folderPath))
+        return;
+    for (auto &pBar : progressBar)
+        delete pBar;
     progressBar.clear();
 
-    QQueue<CPhoto*> photo;
-    std::move(readyForDownload.begin(), readyForDownload.end(), std::inserter(photo, photo.end()));
+    QQueue<CPhoto *> photo;
+    std::move(readyForDownload.begin(), readyForDownload.end(),
+              std::inserter(photo, photo.end()));
     readyForDownload.clear();
 
     auto rowCount = photo.size();
@@ -329,30 +387,57 @@ void CPexelsMainWindow::on_pushButton_download_clicked()
     ui->tableWidget->setColumnCount(1);
     ui->tableWidget->setRowCount(rowCount);
 
-    for(int i = 0; i < rowCount; i++)
+    for (int i = 0; i < rowCount; i++)
     {
         QProgressBar *bar = new QProgressBar();
-        bar->setStyleSheet("QProgressBar {"
-                           "background-color:rgb(200,200,200);"
-                           "color:rgb(170,85,127);"
-                           "border-style:solid;"
-                           "border-radius: 10px;"
-                           "text-align: center;}"
+        bar->setStyleSheet(
+            "QProgressBar {"
+            "background-color:rgb(200,200,200);"
+            "color:rgb(170,85,127);"
+            "border-style:solid;"
+            "border-radius: 10px;"
+            "text-align: center;}"
             "QProgressBar::chunk{"
             "border-radius:10px;"
-            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, "
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, "
+            "y2:1, "
             "stop:0 rgba(185, 105, 254, 255), stop:1 rgba(106,211,255,255));}");
 
-        progressBar.emplaceBack(bar);
+        progressBar.push_back(bar);
         ui->tableWidget->setCellWidget(i, 0, bar);
-        FileDownloader *downloader = new FileDownloader(photo.dequeue(), folderPath, i);
+        FileDownloader *downloader =
+            new FileDownloader(photo.dequeue(), folderPath, i);
         QThreadPool::globalInstance()->start(downloader);
-        connect(downloader, &FileDownloader::updateProgressBar, this, &CPexelsMainWindow::updPBar);
+        connect(downloader, &FileDownloader::updateProgressBar, this,
+                &CPexelsMainWindow::updPBar);
     }
 }
-
+// clear all item selection on listView and clear all image in prepare for
+// downloading
 void CPexelsMainWindow::on_pushButton_clicked()
 {
     readyForDownload.clear();
+    ui->listWidget->clearSelection();
 }
 
+void CPexelsMainWindow::on_actionHistory_triggered()
+{
+    ui->listWidget_history->clear();
+    ui->listWidget_history->setStyleSheet("font: 20pt Comic Sans MS");
+    ui->listWidget_history->sortItems(Qt::DescendingOrder);
+    ui->listWidget_history->addItems(CHistory::get());
+
+    if (ui->listWidget_history->count() == 0)
+        ui->listWidget_history->addItem("There are no history record now");
+
+    auto res = ui->listWidget_history->sizeHintForColumn(0) +
+               15 * ui->listWidget_history->frameWidth();
+    ui->listWidget_history->setFixedWidth(res);
+    ui->stackedWidget->setCurrentIndex(2);
+}
+
+void CPexelsMainWindow::on_clearch_history_clicked()
+{
+    qDeleteAll(ui->listWidget_history->selectedItems());
+    emit updateHistFile(ui->listWidget_history);
+}

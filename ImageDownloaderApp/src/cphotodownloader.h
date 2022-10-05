@@ -1,6 +1,7 @@
 #ifndef CPHOTODOWNLOADER_H
 #define CPHOTODOWNLOADER_H
 #include "cphoto.h"
+#include "qnetworkdiskcache.h"
 #include <QFile>
 #include <QListWidget>
 #include <QNetworkAccessManager>
@@ -16,12 +17,16 @@ class FileDownloader : public QObject, public QRunnable
 
   public:
     explicit FileDownloader(QObject *parent = 0);
-    FileDownloader(CPhoto *photoObj, QString& filePath, int &pBarIndex, QObject *parent = 0);
+    FileDownloader(CPhoto *photoObj, QString &filePath, int &pBarIndex,
+                   QObject *parent = 0);
     ~FileDownloader();
 
   private:
     QNetworkAccessManager *manager{};
     QNetworkReply *reply{};
+
+    QNetworkDiskCache* diskCache{};
+
     QUrl url{};
 
     //"USER - AGENT"

@@ -1,13 +1,15 @@
 #ifndef CPEXELSMAINWINDOW_H
 #define CPEXELSMAINWINDOW_H
 
-#include "cfoldersetting.h"
-#include "cpexelsapi.h"
-#include "cphotodownloader.h"
-#include "imageviewer.h"
 #include <QKeyEvent>
 #include <QMainWindow>
 #include <QProgressBar>
+
+#include "cfoldersetting.h"
+#include "chistory.h"
+#include "cpexelsapi.h"
+#include "cphotodownloader.h"
+#include "imageviewer.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -41,6 +43,11 @@ class CPexelsMainWindow : public QMainWindow
     CFolderSetting folderSetting{};
     CPexelsApi pexelsApi;
     FileDownloader imgDownloader;
+    CHistory searchHistory;
+
+    QVector<int> myIndex{};
+    QVector<QListWidgetItem *> selectedI{};
+
     static int counter;
 
   public:
@@ -49,7 +56,8 @@ class CPexelsMainWindow : public QMainWindow
   public slots:
     void doSearch(int pageNumber = 1);
     void loadImage();
-    void displayImage(const QString &imgUrl, QByteArray *image, const QSize &target_size);
+    void displayImage(const QString &imgUrl, QByteArray *image,
+                      const QSize &target_size);
     void downloadSetImage(QString imageUrl, QSize sz);
 
     void viewImage(QListWidgetItem *);
@@ -63,8 +71,13 @@ class CPexelsMainWindow : public QMainWindow
 
     void updPBar(int pValue, int indexP);
 
+    bool checkFolder(QString &path);
+
+    void updateHistoryFile(QListWidget * item);
+
   signals:
     void setImage(QString imageUrl, QSize sz);
+    void updateHistFile(QListWidget* item);
 
   private slots:
     void on_actionSearch_triggered();
@@ -73,5 +86,7 @@ class CPexelsMainWindow : public QMainWindow
     void on_btn_changeFolder_clicked();
     void on_pushButton_download_clicked();
     void on_pushButton_clicked();
+    void on_actionHistory_triggered();
+    void on_clearch_history_clicked();
 };
 #endif // CPEXELSMAINWINDOW_H

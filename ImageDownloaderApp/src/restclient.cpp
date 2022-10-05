@@ -1,7 +1,8 @@
 #include "restclient.h"
 using namespace pexels;
 
-CRestClient::CRestClient(QString& url, QMap<QString,QString >& header, QObject *parent)
+CRestClient::CRestClient(QString &url, QMap<QString, QString> &header,
+                         QObject *parent)
     : QObject{parent}
 {
     this->header = header;
@@ -16,26 +17,31 @@ void CRestClient::readData()
 void CRestClient::get()
 {
     QNetworkRequest req{url};
-    req.setRawHeader(this->header.firstKey().toUtf8(), header.value(header.firstKey()).toUtf8());
+    req.setRawHeader(this->header.firstKey().toUtf8(),
+                     header.value(header.firstKey()).toUtf8());
     netManager = new QNetworkAccessManager(this);
     netReply = netManager->get(req);
     qDebug() << netReply->readBufferSize();
 
     connect(netReply, &QNetworkReply::readyRead, this, &CRestClient::readData);
-    connect(netReply, &QNetworkReply::finished, this, &CRestClient::finishReading);
+    connect(netReply, &QNetworkReply::finished, this,
+            &CRestClient::finishReading);
 }
 
 void CRestClient::finishReading()
 {
-    if(netReply->error() != QNetworkReply::NoError)
+    if (netReply->error() != QNetworkReply::NoError)
     {
         qDebug() << "Error : " << netReply->errorString();
-        QMessageBox::warning(NULL, "Error", QString("Request[Error] : %1").arg(netReply->errorString()));
+        QMessageBox::warning(
+            NULL, "Error",
+            QString("Request[Error] : %1").arg(netReply->errorString()));
     }
     else
     {
-        //CONVERT THE DATA FROM A JSON DOC TO A JSON OBJECT
-        userJsonInfo = new QJsonObject(QJsonDocument::fromJson(dataBuffer).object());
+        // CONVERT THE DATA FROM A JSON DOC TO A JSON OBJECT
+        userJsonInfo =
+            new QJsonObject(QJsonDocument::fromJson(dataBuffer).object());
         emit jsonInfoReceived();
     }
 }

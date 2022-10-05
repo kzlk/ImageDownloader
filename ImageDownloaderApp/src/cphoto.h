@@ -1,6 +1,7 @@
 #ifndef CPHOTO_H
 #define CPHOTO_H
 #include "IParser.h"
+#include <QMap>
 
 class CPhoto : public IParser
 {

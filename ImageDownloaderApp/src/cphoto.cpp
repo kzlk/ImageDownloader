@@ -1,6 +1,8 @@
 #include "cphoto.h"
 
-CPhoto::CPhoto(QObject* parent){}
+CPhoto::CPhoto(QObject *parent)
+{
+}
 
 int CPhoto::id() const
 {
@@ -19,15 +21,13 @@ bool CPhoto::parseJson(const QJsonObject &jsonObject)
     _width = jsonObject["width"].toInt();
     _height = jsonObject["height"].toInt();
 
-    static QMap<QString, int> photoSizesMap
-    {
-         { "original", PhotoSize::ORIGINAL },
-         { "tiny", PhotoSize::TINY }
-    };
+    static QMap<QString, int> photoSizesMap{{"original", PhotoSize::ORIGINAL},
+                                            {"tiny", PhotoSize::TINY}};
 
-    const auto& keys = photoSizesMap.keys();
-    std::for_each(keys.begin(), keys.end(), [=](const QString& key) {
-        _srcUrls[photoSizesMap[key]] = jsonObject["src"].toObject()[key].toString();
+    const auto &keys = photoSizesMap.keys();
+    std::for_each(keys.begin(), keys.end(), [=](const QString &key) {
+        _srcUrls[photoSizesMap[key]] =
+            jsonObject["src"].toObject()[key].toString();
     });
 
     _alt = jsonObject["alt"].toString();
@@ -49,5 +49,3 @@ QString CPhoto::alt() const
 {
     return _alt;
 }
-
-

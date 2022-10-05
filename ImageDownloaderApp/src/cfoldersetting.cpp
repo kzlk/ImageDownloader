@@ -1,4 +1,7 @@
 #include "cfoldersetting.h"
+#ifdef __linux__
+   #include <unistd.h>
+#endif
 
 CFolderSetting::CFolderSetting()
 {

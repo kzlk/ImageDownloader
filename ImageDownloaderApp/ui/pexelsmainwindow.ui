@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1265</width>
-    <height>764</height>
+    <width>1354</width>
+    <height>566</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,13 +15,13 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="page_3">
        <widget class="QListWidget" name="listWidget">
@@ -79,6 +79,11 @@
           <height>101</height>
          </rect>
         </property>
+        <property name="font">
+         <font>
+          <family>Comic Sans MS</family>
+         </font>
+        </property>
         <property name="title">
          <string/>
         </property>
@@ -93,6 +98,7 @@
            </property>
            <property name="font">
             <font>
+             <family>Comic Sans MS</family>
              <pointsize>12</pointsize>
             </font>
            </property>
@@ -105,6 +111,7 @@
           <widget class="QLineEdit" name="edtNextPage">
            <property name="font">
             <font>
+             <family>Comic Sans MS</family>
              <pointsize>12</pointsize>
             </font>
            </property>
@@ -117,6 +124,7 @@
           <widget class="QPushButton" name="btnPreviousPage">
            <property name="font">
             <font>
+             <family>Comic Sans MS</family>
              <pointsize>12</pointsize>
             </font>
            </property>
@@ -142,6 +150,7 @@
           <widget class="QPushButton" name="btnFirstPage">
            <property name="font">
             <font>
+             <family>Comic Sans MS</family>
              <pointsize>12</pointsize>
             </font>
            </property>
@@ -154,6 +163,7 @@
           <widget class="QLabel" name="lblCurrentPage">
            <property name="font">
             <font>
+             <family>Comic Sans MS</family>
              <pointsize>12</pointsize>
             </font>
            </property>
@@ -179,6 +189,7 @@
           <widget class="QLineEdit" name="edtPreviousPage">
            <property name="font">
             <font>
+             <family>Comic Sans MS</family>
              <pointsize>12</pointsize>
             </font>
            </property>
@@ -191,6 +202,7 @@
           <widget class="QLabel" name="lblTotalPages">
            <property name="font">
             <font>
+             <family>Comic Sans MS</family>
              <pointsize>12</pointsize>
             </font>
            </property>
@@ -203,6 +215,7 @@
           <widget class="QLineEdit" name="edtTotalPages">
            <property name="font">
             <font>
+             <family>Comic Sans MS</family>
              <pointsize>12</pointsize>
             </font>
            </property>
@@ -215,6 +228,7 @@
           <widget class="QPushButton" name="pushButton_download">
            <property name="font">
             <font>
+             <family>Comic Sans MS</family>
              <pointsize>12</pointsize>
             </font>
            </property>
@@ -227,6 +241,7 @@
           <widget class="QPushButton" name="btnLastPage">
            <property name="font">
             <font>
+             <family>Comic Sans MS</family>
              <pointsize>12</pointsize>
             </font>
            </property>
@@ -239,6 +254,7 @@
           <widget class="QPushButton" name="btnNextPage">
            <property name="font">
             <font>
+             <family>Comic Sans MS</family>
              <pointsize>12</pointsize>
             </font>
            </property>
@@ -263,6 +279,7 @@
            </property>
            <property name="font">
             <font>
+             <family>Comic Sans MS</family>
              <pointsize>12</pointsize>
             </font>
            </property>
@@ -314,6 +331,7 @@
              </property>
              <property name="font">
               <font>
+               <family>Comic Sans MS</family>
                <pointsize>18</pointsize>
               </font>
              </property>
@@ -332,6 +350,7 @@
              </property>
              <property name="font">
               <font>
+               <family>Comic Sans MS</family>
                <pointsize>18</pointsize>
               </font>
              </property>
@@ -404,6 +423,7 @@
               <widget class="QLineEdit" name="lineEdit_select_folder">
                <property name="font">
                 <font>
+                 <family>Comic Sans MS</family>
                  <pointsize>14</pointsize>
                 </font>
                </property>
@@ -419,7 +439,8 @@
                </property>
                <property name="font">
                 <font>
-                 <pointsize>14</pointsize>
+                 <family>Comic Sans MS</family>
+                 <pointsize>20</pointsize>
                 </font>
                </property>
                <property name="text">
@@ -437,6 +458,7 @@
               <widget class="QPushButton" name="btn_changeFolder">
                <property name="font">
                 <font>
+                 <family>Comic Sans MS</family>
                  <pointsize>14</pointsize>
                 </font>
                </property>
@@ -468,10 +490,95 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="page">
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="1" column="2">
+         <spacer name="horizontalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Preferred</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="1" alignment="Qt::AlignHCenter">
+         <widget class="QLabel" name="label_2">
+          <property name="font">
+           <font>
+            <family>Comic Sans MS</family>
+            <pointsize>20</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>SEARCH HISTORY</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <spacer name="horizontalSpacer_7">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Minimum</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="1">
+         <widget class="QListWidget" name="listWidget_history">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+          <property name="viewMode">
+           <enum>QListView::ListMode</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1" alignment="Qt::AlignHCenter">
+         <widget class="QPushButton" name="clearch_history">
+          <property name="font">
+           <font>
+            <family>Comic Sans MS</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Clear</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="downloadingPage">
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
+        <item row="1" column="0">
          <widget class="QTableWidget" name="tableWidget"/>
+        </item>
+        <item row="0" column="0" alignment="Qt::AlignHCenter">
+         <widget class="QLabel" name="label_3">
+          <property name="font">
+           <font>
+            <family>Comic Sans MS</family>
+            <pointsize>18</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Current downloading</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
