@@ -54,10 +54,6 @@ void FileDownloader::saveFileToDrive(QNetworkReply *reply)
     case QNetworkReply::NoError: {
         qDebug("file is downloaded successfully.");
         QFile file(downloadPath + photo->alt() + url.fileName());
-        qDebug() << "Thread # "
-                 << Concurrency::details::platform::GetCurrentThreadId()
-                 << "download in "
-                 << downloadPath + photo->alt() + url.fileName();
         reply->deleteLater();
         m_DownloadedData.append(reply->readAll());
         if (file.open(QIODevice::WriteOnly))

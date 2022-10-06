@@ -424,9 +424,8 @@ void CPexelsMainWindow::on_actionHistory_triggered()
 {
     ui->listWidget_history->clear();
     ui->listWidget_history->setStyleSheet("font: 20pt Comic Sans MS");
-    ui->listWidget_history->sortItems(Qt::DescendingOrder);
     ui->listWidget_history->addItems(CHistory::get());
-
+    ui->listWidget_history->sortItems(Qt::DescendingOrder);
     if (ui->listWidget_history->count() == 0)
         ui->listWidget_history->addItem("There are no history record now");
 

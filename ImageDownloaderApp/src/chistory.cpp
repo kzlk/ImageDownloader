@@ -40,7 +40,7 @@ QStringList CHistory::get()
     if (!history.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         historyList
-            << "Error! Can open file \"SearchHistory\" with serarch history\n";
+            << "Error! Can open file \"SearchHistory\" with search history\n No history record";
         return historyList;
     }
     else
