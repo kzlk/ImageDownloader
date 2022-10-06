@@ -1,13 +1,14 @@
 # Image Downloader Application
 ![MainWindow](./Images/MainWindow.png)
 ## About
-This is image downloader application to view/download image by keyword from [Pexels](https://www.pexels.com/ "Pexels Home") using [Pexels API](https://www.pexels.com/api/ "API documentation"). 
+Application to view/download image by keyword from [Pexels](https://www.pexels.com/ "Pexels Home") using [Pexels API](https://www.pexels.com/api/ "API documentation"). 
 
  [ To view bug, problems, need to-do click this!](#TO-DO)
 ***
 ##  Implemented features
 *  Search for pictures over [Pexels](https://www.pexels.com/ "Pexels Home") by keyword
 * Show images in thumbnails and display their names (on status bar) like gallery
+    * The image name shows on the status bar after a click on some image 
 * Dark mode 
 
 ![Searching](./Images/Search.gif)
