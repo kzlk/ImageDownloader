@@ -5,22 +5,19 @@
 #include "cresultpage.h"
 #include <QList>
 
-
 class CPhotoPage : public CResultPage
 {
-public:
+  public:
     CPhotoPage() = default;
 
-    explicit CPhotoPage(QObject* parent);
+    explicit CPhotoPage(QObject *parent);
 
-    bool parseJson(const QJsonObject& jsonObject) override;
+    bool parseJson(const QJsonObject &jsonObject) override;
 
-    QVector<CPhoto*> photos() const;
+    QVector<CPhoto *> photos() const;
 
-   private:
-
-    QVector<CPhoto*> _photos;
-
+  private:
+    QVector<CPhoto *> _photos;
 };
 
 #endif // CPHOTOPAGE_H

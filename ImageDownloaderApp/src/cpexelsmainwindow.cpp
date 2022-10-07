@@ -8,6 +8,7 @@
 #include <qregularexpression.h>
 
 #define MY_API_KEY "563492ad6f917000010000012f6388fbf5064c56baad8491e5de9bad"
+
 int CPexelsMainWindow::counter = 0;
 
 CPexelsMainWindow::CPexelsMainWindow(QWidget *parent)
@@ -83,6 +84,7 @@ CPexelsMainWindow::CPexelsMainWindow(QWidget *parent)
 
 CPexelsMainWindow::~CPexelsMainWindow()
 {
+
     delete ui;
 }
 
@@ -283,9 +285,12 @@ void CPexelsMainWindow::prepareImage(QListWidgetItem *item)
                          readyForDownload.begin();
                      iter != readyForDownload.end(); ++iter)
                 {
+
                     auto photo = *iter;
+                     qDebug() << photo->id() << "|||||||||" << i->id();
                     if (photo->id() == i->id())
                     {
+
                         qDebug()
                             << "Item " << matched << " removed from Vector";
                         readyForDownload.erase(iter);
@@ -308,6 +313,12 @@ void CPexelsMainWindow::prepareImage(QListWidgetItem *item)
 void CPexelsMainWindow::updPBar(int pValue, int indexP)
 {
     progressBar.at(indexP)->setValue(pValue);
+    if(progressBar.at(indexP)->value() == 100) emit deleteDownObj(indexP);
+}
+
+void CPexelsMainWindow::setDownloadedFileName(QString file_name, int indexP)
+{
+    this->label.at(indexP)->setText(file_name);
 }
 
 bool CPexelsMainWindow::checkFolder(QString &path)
@@ -335,6 +346,11 @@ void CPexelsMainWindow::updateHistoryFile(QListWidget *item)
         pickedItem << item->item(i)->text();
 
     CHistory::updateHistory(pickedItem);
+}
+
+void CPexelsMainWindow::deleteDownObj(int &i)
+{
+    pBarIsDownloadedP.enqueue(i);
 }
 
 void CPexelsMainWindow::on_actionSearch_triggered()
@@ -369,27 +385,48 @@ void CPexelsMainWindow::on_btn_changeFolder_clicked()
     folderSetting.writeFolderPath(path);
 }
 
+//todo add append to history
+//delete item by signal when 100%
 void CPexelsMainWindow::on_pushButton_download_clicked()
 {
-    if (!checkFolder(folderPath))
+  if (!checkFolder(folderPath))
         return;
-    for (auto &pBar : progressBar)
-        delete pBar;
-    progressBar.clear();
+
+    auto toDeletePBarSize = pBarIsDownloadedP.size();
 
     QQueue<CPhoto *> photo;
     std::move(readyForDownload.begin(), readyForDownload.end(),
               std::inserter(photo, photo.end()));
     readyForDownload.clear();
-
+    int startPoint = 0;
     auto rowCount = photo.size();
-    ui->tableWidget->clear();
-    ui->tableWidget->setColumnCount(1);
-    ui->tableWidget->setRowCount(rowCount);
+    if(toDeletePBarSize == progressBar.size())
+    {
+           for (auto &label : this->label)
+                delete label;
 
-    for (int i = 0; i < rowCount; i++)
+           for (auto &pBar : progressBar)
+               delete pBar;
+
+        pBarIsDownloadedP.clear();
+        progressBar.clear();
+        this->label.clear();
+
+        ui->tableWidget->clear();
+        ui->tableWidget->setColumnCount(2);
+        ui->tableWidget->setRowCount(rowCount);
+    }
+    else
+    {
+        startPoint = progressBar.size();
+        ui->tableWidget->setRowCount(rowCount + startPoint);
+    }
+
+    auto to = progressBar.size() + photo.size();
+    for (int i = startPoint; i < to ; i++)
     {
         QProgressBar *bar = new QProgressBar();
+        QLabel *label = new QLabel();
         bar->setStyleSheet(
             "QProgressBar {"
             "background-color:rgb(200,200,200);"
@@ -404,14 +441,24 @@ void CPexelsMainWindow::on_pushButton_download_clicked()
             "stop:0 rgba(185, 105, 254, 255), stop:1 rgba(106,211,255,255));}");
 
         progressBar.push_back(bar);
+        this->label.push_back(label);
+
         ui->tableWidget->setCellWidget(i, 0, bar);
+        ui->tableWidget->setCellWidget(i, 1, label);
+
+
         FileDownloader *downloader =
             new FileDownloader(photo.dequeue(), folderPath, i);
         QThreadPool::globalInstance()->start(downloader);
+        connect(downloader, &FileDownloader::setFileName, this,
+                &CPexelsMainWindow::setDownloadedFileName);
         connect(downloader, &FileDownloader::updateProgressBar, this,
                 &CPexelsMainWindow::updPBar);
+
     }
+
 }
+
 // clear all item selection on listView and clear all image in prepare for
 // downloading
 void CPexelsMainWindow::on_pushButton_clicked()

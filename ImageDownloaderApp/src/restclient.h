@@ -24,7 +24,6 @@ class CRestClient : public QObject
     QNetworkAccessManager *netManager{};
     QNetworkReply *netReply{};
     QByteArray dataBuffer{};
-    QPixmap *img{};
 
     // GET
     void get();

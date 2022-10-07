@@ -17,7 +17,7 @@ CFolderSetting::CFolderSetting()
     }
 
 #ifdef __linux__
-        folderPath = "home" + QString(getlogin()) + "/downloads/";
+        folderPath = "home/" + QString(getlogin()) + "/downloads/";
 #elif _WIN32
         folderPath = "C:/Users/" + QString(getenv("USERNAME")) + "/Downloads/";
 #endif

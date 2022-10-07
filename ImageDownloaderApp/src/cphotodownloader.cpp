@@ -1,6 +1,5 @@
 #include "cphotodownloader.h"
 #include "src/cpexelsmainwindow.h"
-
 #include <QListWidgetItem>
 #include <QPainter>
 
@@ -8,15 +7,13 @@ FileDownloader::FileDownloader(QObject *parent) : QObject(parent)
 {
     manager = new QNetworkAccessManager;
 
-    // cache
     diskCache = new QNetworkDiskCache(this);
+    // set directory for cache
     diskCache->setCacheDirectory("cacheDir");
     manager->setCache(diskCache);
 
     connect(manager, &QNetworkAccessManager::finished, this,
             &FileDownloader::onFinished);
-
-
 }
 
 FileDownloader::FileDownloader(CPhoto *photoObj, QString &folderPath,
@@ -24,6 +21,7 @@ FileDownloader::FileDownloader(CPhoto *photoObj, QString &folderPath,
     : QObject(parent), downloadPath(folderPath), progressBarIndex(pBarIndex),
       photo(photoObj)
 {
+
 }
 
 FileDownloader::~FileDownloader()
@@ -34,7 +32,10 @@ FileDownloader::~FileDownloader()
 
 void FileDownloader::run()
 {
+
     manager = new QNetworkAccessManager;
+    // download original image quality
+    emit setFileName(photo->alt(), progressBarIndex);
     setFile((photo->srcUrl(photo->ORIGINAL)));
 
     QEventLoop loop;
@@ -45,17 +46,23 @@ void FileDownloader::run()
     connect(reply, &QNetworkReply::downloadProgress, this,
             &FileDownloader::updateProgress, Qt::DirectConnection);
     loop.exec();
+
+
 }
 
 void FileDownloader::saveFileToDrive(QNetworkReply *reply)
 {
     switch (reply->error())
     {
-    case QNetworkReply::NoError: {
+    case QNetworkReply::NoError:
+    {
         qDebug("file is downloaded successfully.");
+        //set downloaded file name
         QFile file(downloadPath + photo->alt() + url.fileName());
         reply->deleteLater();
+        //read photo data
         m_DownloadedData.append(reply->readAll());
+        //write to selected folder
         if (file.open(QIODevice::WriteOnly))
         {
             file.write(m_DownloadedData);
@@ -64,13 +71,14 @@ void FileDownloader::saveFileToDrive(QNetworkReply *reply)
         file.close();
     }
     break;
-    default: {
+    default:
+    {
         qDebug(reply->errorString().toLatin1());
     };
     }
 }
 
-void FileDownloader::setFile(QString fileURL, const QSize &target_size)
+void FileDownloader::setFile(const QString fileURL, const QSize &target_size)
 {
     m_DownloadedData.clear();
     m_target_size = target_size;
@@ -95,21 +103,23 @@ void FileDownloader::setFile(QString fileURL, const QSize &target_size)
 
 void FileDownloader::onFinished(QNetworkReply *reply)
 {
-    //image from cache? or no?
+    // image from cache? or no?
     QVariant fromCache =
         reply->attribute(QNetworkRequest::SourceIsFromCacheAttribute);
     qDebug() << "Page from cache?" << fromCache.toBool();
 
     switch (reply->error())
     {
-    case QNetworkReply::NoError: {
+    case QNetworkReply::NoError:
+    {
         qDebug("file is downloaded successfully.");
         reply->deleteLater();
         m_DownloadedData.append(reply->readAll());
         emit downloaded(m_fileUrl, &m_DownloadedData, m_target_size);
     }
     break;
-    default: {
+    default:
+    {
         qDebug(reply->errorString().toLatin1());
     };
     }
@@ -117,7 +127,9 @@ void FileDownloader::onFinished(QNetworkReply *reply)
 
 // update progress bar
 // TODO: make progress in byte/mb per sec -> (1.2MB/3.6MB)
+// Add downloading file name
 void FileDownloader::updateProgress(qint64 now, qint64 total)
 {
+
     emit updateProgressBar(100 * now / total, progressBarIndex);
 }

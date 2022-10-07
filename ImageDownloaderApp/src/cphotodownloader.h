@@ -1,5 +1,6 @@
 #ifndef CPHOTODOWNLOADER_H
 #define CPHOTODOWNLOADER_H
+
 #include "cphoto.h"
 #include "qnetworkdiskcache.h"
 #include <QFile>
@@ -24,9 +25,7 @@ class FileDownloader : public QObject, public QRunnable
   private:
     QNetworkAccessManager *manager{};
     QNetworkReply *reply{};
-
-    QNetworkDiskCache* diskCache{};
-
+    QNetworkDiskCache *diskCache{};
     QUrl url{};
 
     //"USER - AGENT"
@@ -37,10 +36,8 @@ class FileDownloader : public QObject, public QRunnable
     QString m_fileUrl{};
     QByteArray m_DownloadedData{};
     QSize m_target_size{};
-
     QString downloadPath{};
     int progressBarIndex{};
-
     CPhoto *photo{};
 
   protected:
@@ -53,7 +50,7 @@ class FileDownloader : public QObject, public QRunnable
     void saveFileToDrive(QNetworkReply *reply);
 
   public slots:
-    void setFile(QString fileURL, const QSize &target_size = {});
+    void setFile(const QString fileURL, const QSize &target_size = {});
 
   signals:
 
@@ -62,6 +59,9 @@ class FileDownloader : public QObject, public QRunnable
 
     // update progress bar in main window
     void updateProgressBar(int receivedPersent, int pBarIndex);
+
+    // set downloading file name
+    void setFileName(QString fileName, int index);
 };
 
 #endif // CPHOTODOWNLOADER_H

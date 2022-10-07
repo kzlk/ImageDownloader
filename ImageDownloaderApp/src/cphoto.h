@@ -11,8 +11,8 @@ public:
 
     enum PhotoSize
     {
-        ORIGINAL,
-        TINY,
+        ORIGINAL, // original image quality
+        TINY,     // tiny image quality
         _COUNT
     };
 
@@ -20,13 +20,14 @@ public:
     int width() const;
     int height() const;
 
-    //photo description
+    // get photo description
     QString alt() const;
 
     explicit CPhoto(QObject* parent);
 
     bool parseJson(const QJsonObject& jsonObject) override;
 
+    //get image url
     QString srcUrl(PhotoSize photoSize) const;
 
 private:

@@ -39,6 +39,7 @@ class CPexelsMainWindow : public QMainWindow
     QMap<QListWidgetItem *, QImage *> m_mpImageList{};
     QVector<CPhoto *> readyForDownload{};
     QVector<QProgressBar *> progressBar{};
+    QVector<QLabel*> label{};
     ImageViewer *m_imgViewer{};
     CFolderSetting folderSetting{};
     CPexelsApi pexelsApi;
@@ -47,6 +48,8 @@ class CPexelsMainWindow : public QMainWindow
 
     QVector<int> myIndex{};
     QVector<QListWidgetItem *> selectedI{};
+
+    QQueue<int> pBarIsDownloadedP{};
 
     static int counter;
 
@@ -71,11 +74,16 @@ class CPexelsMainWindow : public QMainWindow
 
     void updPBar(int pValue, int indexP);
 
+    void setDownloadedFileName(QString file_name, int indexP);
+
     bool checkFolder(QString &path);
 
     void updateHistoryFile(QListWidget * item);
 
+    void deleteDownObj(int& i);
+
   signals:
+    void deleteDownloadObject(int& i);
     void setImage(QString imageUrl, QSize sz);
     void updateHistFile(QListWidget* item);
 

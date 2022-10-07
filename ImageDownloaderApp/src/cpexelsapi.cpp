@@ -5,7 +5,6 @@
 CPexelsApi::CPexelsApi(QString apiKey, QObject *parent)
     : QObject{parent}, m_apiKey(apiKey)
 {
-    listImageUrl = new QList<QString>();
 }
 
 QString CPexelsApi::getApiKey() const
@@ -16,11 +15,7 @@ QString CPexelsApi::getApiKey() const
 bool CPexelsApi::getimageSearchJson(QString searchKey, int pageNumber,
                                     QString apiKey)
 {
-    if (m_searchKey != searchKey)
-        m_totalPagesSet = false;
-
     m_searchKey = searchKey;
-    listImageUrl->clear();
 
     if (apiKey == "")
         apiKey = getApiKey();
